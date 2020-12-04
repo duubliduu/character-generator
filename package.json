@@ -17,6 +17,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.1",
     "styled-components": "^5.0.1",
+    "ts-node": "^8.9.1",
     "typescript": "~3.7.2"
   },
   "scripts": {
@@ -26,7 +27,8 @@
     "eject": "react-scripts eject",
     "prettify": "yarn prettier --write src/**/.tsx",
     "docker:build": "docker build --tag character-generator .",
-    "docker:run": "docker run --publish 80:80 --name cg character-generator"
+    "docker:run": "docker run --publish 80:80 --name cg character-generator",
+    "docker:save": "docker save character-generator | bzip2 | ssh root@hertzner 'bunzip2 | docker load'"
   },
   "eslintConfig": {
     "extends": "react-app"
