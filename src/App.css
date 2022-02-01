@@ -1,38 +1,80 @@
-.App {
+:root {
+  font-size: 16px;
+}
+
+html {
+  font-family: "Open Sans", sans-serif;
+  padding: 20px;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+}
+
+th {
+  padding: 10px;
+}
+th:nth-child(even) {
+  padding-left: 5px;
+}
+th:nth-child(odd) {
+  padding-right: 5px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #eceded;
+}
+
+thead tr:last-child th {
+  font-weight: normal;
+  font-size: 0.875rem;
+  padding-top: 0;
+}
+
+td {
+  padding: 10px;
   text-align: center;
+  white-space: nowrap;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+td:first-child {
+  border-left: 1px solid #ccc;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+td:nth-child(even) {
+  border-left: 1px solid #ccc;
+  padding-right: 5px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+td:nth-child(odd) {
+  border-right: 1px solid #ccc;
+  padding-left: 5px;
 }
 
-.App-link {
-  color: #61dafb;
+th:first-child,
+td:first-child {
+  text-align: left;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+tbody tr:last-child td {
+  font-size: 0.875rem;
+  font-style: italic;
+  text-align: center;
+  border: none;
+}
+
+tbody tr:last-child {
+  background-color: transparent;
+}
+
+tbody tr:last-child td a {
+  color: currentColor;
+  text-decoration: underline;
+}
+
+tbody tr:last-child td a:hover {
+  text-decoration: none;
 }
