@@ -4,7 +4,7 @@
 
 html {
   font-family: "Open Sans", sans-serif;
-  padding: 20px;
+  margin: 20px;
 }
 
 table {
@@ -14,12 +14,6 @@ table {
 
 th {
   padding: 10px;
-}
-th:nth-child(even) {
-  padding-left: 5px;
-}
-th:nth-child(odd) {
-  padding-right: 5px;
 }
 
 tbody tr:nth-child(odd) {
@@ -36,22 +30,6 @@ td {
   padding: 10px;
   text-align: center;
   white-space: nowrap;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-}
-
-td:first-child {
-  border-left: 1px solid #ccc;
-}
-
-td:nth-child(even) {
-  border-left: 1px solid #ccc;
-  padding-right: 5px;
-}
-
-td:nth-child(odd) {
-  border-right: 1px solid #ccc;
-  padding-left: 5px;
 }
 
 th:first-child,
@@ -77,4 +55,26 @@ tbody tr:last-child td a {
 
 tbody tr:last-child td a:hover {
   text-decoration: none;
+}
+
+td.low {
+  border-left: solid 5px #ffffff;
+}
+
+td.score {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+td.high {
+  border-right: solid 5px #ffffff;
+}
+
+th.score {
+  font-style: italic;
+  padding: 0 0 10px 0;
+}
+
+th {
+  padding: 0 0 10px 0;
 }
