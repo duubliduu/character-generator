@@ -30,12 +30,19 @@ export const TYPES = {
   C: "C", // 2d20 under trait + target number
 };
 
+const formatModifier = (number) => (number > 0 ? `+${number}` : number);
+
 const randomTrait = (type) => {
   switch (type) {
     case TYPES.A:
       return 5 + Math.floor(new DiceRoller().roll("3d6/2").total);
     case TYPES.B:
-      return new DiceRoller().roll("1d8+1").total;
+      // agreeableness of 7
+      // roll under -2 Empathic resists
+      // roll over -2 Dominant resists
+      return formatModifier(
+        5 - Math.floor(new DiceRoller().roll("2d8/2").total)
+      );
     case TYPES.C:
       return Math.floor(new DiceRoller().roll("3d6/2").total);
     default:
@@ -62,57 +69,81 @@ function App() {
 
   const characters = generateCharacters(20, race, gender, type);
 
-  const formatModifier = (number) => (number > 0 ? `+${number}` : number);
-
-  const renderTrait = (trait, type) => (
-    <>
-      <td
-        className={`low ${trait < (type === TYPES.A ? 10 : 5) && "dominating"}`}
-      >
-        {type === TYPES.C
-          ? trait
-          : formatModifier(trait - (type === TYPES.B ? 5 : 10))}
-      </td>
-      <td className="score">{type !== TYPES.C && trait}</td>
-      <td
-        className={`high ${
-          trait > (type === TYPES.A ? 10 : 5) && "dominating"
-        }`}
-      >
-        {type === TYPES.C
-          ? 10 - trait
-          : formatModifier((type === TYPES.B ? 5 : 10) - trait)}
-      </td>
-    </>
-  );
+  const renderTrait = (trait) => {
+    if (type === TYPES.B) {
+      return (
+        <td className="score" colSpan={2}>
+          {type !== TYPES.C && trait}
+        </td>
+      );
+    }
+    return (
+      <>
+        <td
+          className={`low ${
+            trait < (type === TYPES.A ? 10 : 5) && "dominating"
+          }`}
+        >
+          {type === TYPES.C
+            ? trait
+            : formatModifier(trait - (type === TYPES.B ? 5 : 10))}
+        </td>
+        <td className="score">{type !== TYPES.C && trait}</td>
+        <td
+          className={`high ${
+            trait > (type === TYPES.A ? 10 : 5) && "dominating"
+          }`}
+        >
+          {type === TYPES.C
+            ? 10 - trait
+            : formatModifier((type === TYPES.B ? 5 : 10) - trait)}
+        </td>
+      </>
+    );
+  };
   return (
     <table className={`type-${type}`}>
       <thead>
         <tr>
           <th rowSpan={2}>Name</th>
-          <th colSpan={3}>Openness</th>
-          <th colSpan={3}>Conscientiousness</th>
-          <th colSpan={3}>Extraversion</th>
-          <th colSpan={3}>Agreeableness</th>
-          <th colSpan={3}>Neuroticism</th>
+          <th colSpan={type === TYPES.B ? 2 : 3}>Openness</th>
+          <th colSpan={type === TYPES.B ? 2 : 3}>Conscientiousness</th>
+          <th colSpan={type === TYPES.B ? 2 : 3}>Extraversion</th>
+          <th colSpan={type === TYPES.B ? 2 : 3}>Agreeableness</th>
+          <th colSpan={type === TYPES.B ? 2 : 3}>Neuroticism</th>
         </tr>
-        <tr>
-          <th>Cautious</th>
-          <th />
-          <th>Curious</th>
-          <th>Carefree</th>
-          <th />
-          <th>Careful</th>
-          <th>Reserved</th>
-          <th />
-          <th>Outgoing</th>
-          <th>Dominant</th>
-          <th />
-          <th>Empathic</th>
-          <th>Confident</th>
-          <th />
-          <th>Sensitive</th>
-        </tr>
+        {type === TYPES.B ? (
+          <tr>
+            <th>Curious</th>
+            <th>Cautious</th>
+            <th>Careful</th>
+            <th>Carefree</th>
+            <th>Outgoing</th>
+            <th>Reserved</th>
+            <th>Empathic</th>
+            <th>Dominant</th>
+            <th>Sensitive</th>
+            <th>Confident</th>
+          </tr>
+        ) : (
+          <tr>
+            <th>Cautious</th>
+            <th />
+            <th>Curious</th>
+            <th>Carefree</th>
+            <th />
+            <th>Careful</th>
+            <th>Reserved</th>
+            <th />
+            <th>Outgoing</th>
+            <th>Dominant</th>
+            <th />
+            <th>Empathic</th>
+            <th>Confident</th>
+            <th />
+            <th>Sensitive</th>
+          </tr>
+        )}
       </thead>
       <tbody>
         {characters.map(({ name, O, C, E, A, N }, index) => (
