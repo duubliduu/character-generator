@@ -41,7 +41,7 @@ const randomTrait = (type) => {
       // roll under -2 Empathic resists
       // roll over -2 Dominant resists
       return formatModifier(
-        5 - Math.floor(new DiceRoller().roll("2d8/2").total)
+        5 - Math.ceil(new DiceRoller().roll("3d6/2").total)
       );
     case TYPES.C:
       return Math.floor(new DiceRoller().roll("3d6/2").total);
