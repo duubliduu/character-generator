@@ -9,9 +9,8 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/:type" element={<App />} />
-        <Route path="/:type/:race" element={<App />} />
-        <Route path="/:type/:race/:gender" element={<App />} />
+        <Route path="/:race" element={<App />} />
+        <Route path="/:race/:gender" element={<App />} />
         <Route path="*" element={<App />} />
       </Routes>
     </BrowserRouter>

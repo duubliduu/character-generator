@@ -24,145 +24,90 @@ const races = [
   "ogre",
 ];
 
-export const TYPES = {
-  A: "A", // 2d20 roll under + modifier
-  B: "B", // 2d10 roll under over
-  C: "C", // 2d20 under trait + target number
-};
-
 const formatModifier = (number) => (number > 0 ? `+${number}` : number);
 
-const randomTrait = (type) => {
-  switch (type) {
-    case TYPES.A:
-      return 5 + Math.floor(new DiceRoller().roll("3d6/2").total);
-    case TYPES.B:
-      // agreeableness of 7
-      // roll under -2 Empathic resists
-      // roll over -2 Dominant resists
-      return formatModifier(
-        5 - Math.ceil(new DiceRoller().roll("3d6/2").total)
-      );
-    case TYPES.C:
-      return Math.floor(new DiceRoller().roll("3d6/2").total);
-    default:
-      return 10;
-  }
+const randomTrait = () => {
+  // agreeableness of 12
+  // roll under -2 Empathic resists
+  // roll over -2 Dominant resists
+  return formatModifier(10 - new DiceRoller().roll("2d6+3").total);
 };
 
-const generateCharacters = (number, race, gender, type) =>
+const fillObject = (object, fill) => {
+  return Object.keys(object).reduce((a, c) => {
+    return {
+      ...a,
+      [c]: fill(),
+    };
+  }, object);
+};
+
+const generateCharacters = (number, race, gender) =>
   Array(number)
     .fill(null)
     .map(() => ({
       name: nameByRace(race, {
         gender,
       }),
-      O: randomTrait(type),
-      C: randomTrait(type),
-      E: randomTrait(type),
-      A: randomTrait(type),
-      N: randomTrait(type),
+      ...fillObject(
+        { O: null, C: null, E: null, A: null, N: null },
+        randomTrait
+      ),
     }));
 
 function App() {
-  const { race = "human", gender = "male", type = TYPES.A } = useParams();
+  const { race = "human", gender = "male" } = useParams();
 
-  const characters = generateCharacters(20, race, gender, type);
+  const characters = generateCharacters(20, race, gender);
 
-  const renderTrait = (trait) => {
-    if (type === TYPES.B) {
-      return (
-        <td className="score" colSpan={2}>
-          {type !== TYPES.C && trait}
-        </td>
-      );
-    }
-    return (
-      <>
-        <td
-          className={`low ${
-            trait < (type === TYPES.A ? 10 : 5) && "dominating"
-          }`}
-        >
-          {type === TYPES.C
-            ? trait
-            : formatModifier(trait - (type === TYPES.B ? 5 : 10))}
-        </td>
-        <td className="score">{type !== TYPES.C && trait}</td>
-        <td
-          className={`high ${
-            trait > (type === TYPES.A ? 10 : 5) && "dominating"
-          }`}
-        >
-          {type === TYPES.C
-            ? 10 - trait
-            : formatModifier((type === TYPES.B ? 5 : 10) - trait)}
-        </td>
-      </>
-    );
-  };
+  const renderTrait = (trait) => (
+    <td className="score" colSpan={2}>
+      {trait}
+    </td>
+  );
+
   return (
-    <table className={`type-${type}`}>
+    <table className={`type-B`}>
       <thead>
         <tr>
           <th rowSpan={2}>Name</th>
-          <th colSpan={type === TYPES.B ? 2 : 3}>Openness</th>
-          <th colSpan={type === TYPES.B ? 2 : 3}>Conscientiousness</th>
-          <th colSpan={type === TYPES.B ? 2 : 3}>Extraversion</th>
-          <th colSpan={type === TYPES.B ? 2 : 3}>Agreeableness</th>
-          <th colSpan={type === TYPES.B ? 2 : 3}>Neuroticism</th>
+          <th colSpan={2}>Openness</th>
+          <th colSpan={2}>Conscientiousness</th>
+          <th colSpan={2}>Extraversion</th>
+          <th colSpan={2}>Agreeableness</th>
+          <th colSpan={2}>Neuroticism</th>
         </tr>
-        {type === TYPES.B ? (
-          <tr>
-            <th>Curious</th>
-            <th>Cautious</th>
-            <th>Careful</th>
-            <th>Carefree</th>
-            <th>Outgoing</th>
-            <th>Reserved</th>
-            <th>Empathic</th>
-            <th>Dominant</th>
-            <th>Sensitive</th>
-            <th>Confident</th>
-          </tr>
-        ) : (
-          <tr>
-            <th>Cautious</th>
-            <th />
-            <th>Curious</th>
-            <th>Carefree</th>
-            <th />
-            <th>Careful</th>
-            <th>Reserved</th>
-            <th />
-            <th>Outgoing</th>
-            <th>Dominant</th>
-            <th />
-            <th>Empathic</th>
-            <th>Confident</th>
-            <th />
-            <th>Sensitive</th>
-          </tr>
-        )}
+        <tr>
+          <th>Curious</th>
+          <th>Cautious</th>
+          <th>Careful</th>
+          <th>Carefree</th>
+          <th>Outgoing</th>
+          <th>Reserved</th>
+          <th>Empathic</th>
+          <th>Dominant</th>
+          <th>Sensitive</th>
+          <th>Confident</th>
+        </tr>
       </thead>
       <tbody>
         {characters.map(({ name, O, C, E, A, N }, index) => (
           <tr key={index}>
             <td>{name}</td>
-            {renderTrait(O, type)}
-            {renderTrait(C, type)}
-            {renderTrait(E, type)}
-            {renderTrait(A, type)}
-            {renderTrait(N, type)}
+            {renderTrait(O)}
+            {renderTrait(C)}
+            {renderTrait(E)}
+            {renderTrait(A)}
+            {renderTrait(N)}
           </tr>
         ))}
         <tr>
           <td colSpan={16}>
-            <Link to={`/${type}/${race}/male`}>male</Link>,{" "}
-            <Link to={`/${type}/${race}/female`}>female</Link>,{" "}
+            <Link to={`/${race}/male`}>male</Link>,{" "}
+            <Link to={`/${race}/female`}>female</Link>,{" "}
             {races.map((_race, index) => (
               <span key={index}>
-                <Link to={`/${type}/${_race}/${gender}`}>{_race}</Link>
+                <Link to={`/${_race}/${gender}`}>{_race}</Link>
                 {`, `}
               </span>
             ))}
