@@ -5,27 +5,27 @@ table {
   max-width: 100%;
 }
 
-th {
-  padding: 10px;
-}
-
 tbody tr:nth-child(odd) {
   background-color: #eceded;
 }
 
 thead tr:last-child th {
-  font-weight: normal;
+  font-weight: bold;
   font-size: 0.875rem;
   padding-top: 0;
 }
 
 td {
-  padding: 10px;
+  padding: 10px 0;
   text-align: center;
-  white-space: nowrap;
 }
 
-thead > tr:first-child > th:first-child,
+.need {
+  display: block;
+  font-size: 0.8rem;
+}
+
+thead > tr > th:first-child,
 td:first-child {
   text-align: left;
   padding-left: 10px;
@@ -52,28 +52,38 @@ tbody tr:last-child td a:hover {
   text-decoration: none;
 }
 
-td.low {
-  border-left: solid 5px #ffffff;
-}
-
-td.score {
-  padding-right: 0;
-  padding-left: 0;
-}
-
-td.high {
-  border-right: solid 5px #ffffff;
-}
-
-th.score {
-  font-style: italic;
-  padding: 0 0 10px 0;
+thead th {
 }
 
 th {
   padding: 0 0 10px 0;
 }
 
-.type-C td.dominating {
+.score {
+  display: block;
   font-weight: bold;
+}
+
+.targetNumber {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+.hide-mobile {
+  display: none;
+}
+
+.hide-desktop {
+  display: block;
+}
+
+@media only screen and (min-width: 758px) {
+  .hide-mobile {
+    display: block;
+  }
+
+  .hide-desktop {
+    display: none;
+  }
 }
