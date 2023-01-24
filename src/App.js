@@ -33,7 +33,7 @@ const randomTrait = () => {
   // agreeableness of 12
   // roll under -2 Empathic resists
   // roll over -2 Dominant resists
-  return new DiceRoller().roll("2d6+3").total - 10;
+  return new DiceRoller().roll("5d3").total - 10;
 };
 
 const fillObject = (object, fill) => {
