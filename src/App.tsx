@@ -4,6 +4,7 @@ import copes from "./data/copes.json";
 import identities from "./data/identities.json";
 import needs from "./data/needs.json";
 import races from "./data/races.json";
+import issues from "./data/issues.json";
 import { FunctionComponent } from "react";
 
 enum Gender {
@@ -38,11 +39,16 @@ const randomCope = () => {
   return copes.sort(() => Math.random() - 0.5)[0];
 };
 
+const randomIssue = () => {
+  return issues.sort(() => Math.random() - 0.5)[0];
+};
+
 type Character = {
   name: string;
   need: string;
   cope: string;
   identity: string;
+  issue: string;
   O: number;
   C: number;
   E: number;
@@ -68,6 +74,7 @@ const generateCharacters = (
       need: randomNeed(),
       cope: randomCope(),
       identity: randomIdentity(),
+      issue: randomIssue(),
     }));
 
 const normalizeGender = (gender: string) => {
@@ -102,7 +109,7 @@ function App() {
   ];
 
   return (
-    <div className="container py-2">
+    <div className="container py-2 text-current">
       <div className="bg-white dark:bg-dark rounded-lg shadow-xl  px-6 py-4 ring-1 ring-slate-200">
         <div>
           <table className="table-auto border-collapse">
@@ -112,20 +119,25 @@ function App() {
                 {traits.map((trait, index) => (
                   <th key={index} className="sm:w-14 md:w-20 lg:w-32 leading-4">
                     <span>{trait[0]}</span>
-                    <span className="hidden lg:block text-xs font-light">{trait}</span>
+                    <span className="hidden lg:block text-xs font-light">
+                      {trait}
+                    </span>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {characters.map(
-                ({ name, O, C, E, A, N, identity, need, cope }, index) => (
+                (
+                  { name, O, C, E, A, N, identity, need, cope, issue },
+                  index
+                ) => (
                   <tr key={index}>
                     <td className="leading-4 border-solid border-slate-200 border-2 px-2 py-2">
                       {name}
                       <br />
                       <span className="text-xs">
-                        {cope}, <i>desires</i> {need}
+                        {cope} <i>hides</i> {issue}, <i>desires</i> {need}
                       </span>
                     </td>
                     <Trait trait={O} />
@@ -138,8 +150,14 @@ function App() {
               )}
               <tr>
                 <td colSpan={16}>
-                  <Link className="cursor-pointer" to={`/${race}/male`}>male</Link>,{" "}
-                  <Link className="cursor-pointer" to={`/${race}/female`}>female</Link>,{" "}
+                  <Link className="cursor-pointer" to={`/${race}/male`}>
+                    male
+                  </Link>
+                  ,{" "}
+                  <Link className="cursor-pointer" to={`/${race}/female`}>
+                    female
+                  </Link>
+                  ,{" "}
                   {races.map((_race, index) => (
                     <span key={index}>
                       <Link to={`/${_race}/${gender}`}>{_race}</Link>
