@@ -138,8 +138,8 @@ function App() {
               )}
               <tr>
                 <td colSpan={16}>
-                  <Link to={`/${race}/male`}>male</Link>,{" "}
-                  <Link to={`/${race}/female`}>female</Link>,{" "}
+                  <Link className="cursor-pointer" to={`/${race}/male`}>male</Link>,{" "}
+                  <Link className="cursor-pointer" to={`/${race}/female`}>female</Link>,{" "}
                   {races.map((_race, index) => (
                     <span key={index}>
                       <Link to={`/${_race}/${gender}`}>{_race}</Link>
