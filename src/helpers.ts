@@ -54,6 +54,20 @@ export type Character = {
   N: number;
 };
 
+export const generateCharacter = (race: string, gender: Gender): Character => ({
+  name: nameByRace(race, {
+    gender,
+  }) as string,
+  ...(fillObject(
+    { O: null, C: null, E: null, A: null, N: null },
+    randomTrait
+  ) as { O: number; C: number; E: number; A: number; N: number }),
+  need: randomNeed(),
+  cope: randomCope(),
+  identity: randomIdentity(),
+  issue: randomIssue(),
+});
+
 export const generateCharacters = (
   number: number,
   race: string,
@@ -61,19 +75,7 @@ export const generateCharacters = (
 ): Character[] =>
   Array(number)
     .fill(null)
-    .map(() => ({
-      name: nameByRace(race, {
-        gender,
-      }) as string,
-      ...(fillObject(
-        { O: null, C: null, E: null, A: null, N: null },
-        randomTrait
-      ) as { O: number; C: number; E: number; A: number; N: number }),
-      need: randomNeed(),
-      cope: randomCope(),
-      identity: randomIdentity(),
-      issue: randomIssue(),
-    }));
+    .map(() => generateCharacter(race, gender));
 
 export const normalizeGender = (gender: string) => {
   switch (gender) {

@@ -1,7 +1,14 @@
-import { Link, useParams } from "react-router-dom";
-import races from "./data/races.json";
-import { generateCharacters, normalizeGender } from "./helpers";
+import { useParams } from "react-router-dom";
+import {
+  Character,
+  Gender,
+  generateCharacter,
+  generateCharacters,
+  normalizeGender,
+} from "./helpers";
 import Trait from "./Trait";
+import Footer from "./Footer";
+import { useEffect, useState } from "react";
 
 const traits = [
   "Openness",
@@ -11,12 +18,47 @@ const traits = [
   "Neuroticism",
 ];
 
+const localStorageKey = "character-generator";
+
+const saveCharacters = (characters: Character[]) => {
+  localStorage.setItem(localStorageKey, JSON.stringify(characters));
+};
+
+const getCharacters = (): Character[] => {
+  const storedItem = localStorage.getItem(localStorageKey);
+  return JSON.parse(storedItem || "[]");
+};
+
+const loadCharacters = (race: string, gender: Gender): Character[] => {
+  const items = getCharacters();
+  const missing = 20 - items.length;
+  const newItems = [...generateCharacters(missing, race, gender), ...items];
+  saveCharacters(newItems);
+  return newItems;
+};
+
 function App() {
   const { race = "human", gender = "male" } = useParams();
 
   const normalizedGender = normalizeGender(gender);
 
-  const characters = generateCharacters(20, race, normalizedGender);
+  const [characters, setCharacters] = useState(
+    loadCharacters(race, normalizedGender)
+  );
+
+  const regenerateCharacter = (index: number) => {
+    characters[index] = generateCharacter(race, normalizedGender);
+    setCharacters([...characters]);
+  };
+
+  const regenerateAllCharacters = () => {
+    const allNewCharacters = generateCharacters(20, race, normalizedGender);
+    setCharacters(allNewCharacters);
+  };
+
+  useEffect(() => {
+    saveCharacters(characters);
+  }, [characters]);
 
   return (
     <div className="container py-2 text-current">
@@ -34,6 +76,9 @@ function App() {
                     </span>
                   </th>
                 ))}
+                <th>
+                  <button onClick={regenerateAllCharacters}>R</button>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -55,27 +100,18 @@ function App() {
                     <Trait trait={E} />
                     <Trait trait={A} />
                     <Trait trait={N} />
+                    <td>
+                      <button
+                        className="rounded"
+                        onClick={() => regenerateCharacter(index)}
+                      >
+                        R
+                      </button>
+                    </td>
                   </tr>
                 )
               )}
-              <tr>
-                <td colSpan={16}>
-                  <Link className="cursor-pointer" to={`/${race}/male`}>
-                    male
-                  </Link>
-                  ,{" "}
-                  <Link className="cursor-pointer" to={`/${race}/female`}>
-                    female
-                  </Link>
-                  ,{" "}
-                  {races.map((_race, index) => (
-                    <span key={index}>
-                      <Link to={`/${_race}/${gender}`}>{_race}</Link>
-                      {`, `}
-                    </span>
-                  ))}
-                </td>
-              </tr>
+              <Footer race={race} gender={normalizedGender} />
             </tbody>
           </table>
         </div>
