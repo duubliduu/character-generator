@@ -1,97 +1,15 @@
-import { nameByRace } from "fantasy-name-generator";
 import { Link, useParams } from "react-router-dom";
-import copes from "./data/copes.json";
-import identities from "./data/identities.json";
-import needs from "./data/needs.json";
 import races from "./data/races.json";
-import issues from "./data/issues.json";
-import { FunctionComponent } from "react";
+import { generateCharacters, normalizeGender } from "./helpers";
+import Trait from "./Trait";
 
-enum Gender {
-  Male = "male",
-  Female = "female",
-}
-
-const formatModifier = (number: number) => (number > 0 ? `+${number}` : number);
-
-const rollD4 = () => Math.ceil(Math.random() * 4);
-
-const randomTrait = () => rollD4() - rollD4();
-
-const fillObject = (object: Record<string, any>, fill: () => any) => {
-  return Object.keys(object).reduce((a, c) => {
-    return {
-      ...a,
-      [c]: fill(),
-    };
-  }, {});
-};
-
-const randomNeed = () => {
-  return needs.sort(() => Math.random() - 0.5)[0];
-};
-
-const randomIdentity = () => {
-  return identities.sort(() => Math.random() - 0.5)[0];
-};
-
-const randomCope = () => {
-  return copes.sort(() => Math.random() - 0.5)[0];
-};
-
-const randomIssue = () => {
-  return issues.sort(() => Math.random() - 0.5)[0];
-};
-
-type Character = {
-  name: string;
-  need: string;
-  cope: string;
-  identity: string;
-  issue: string;
-  O: number;
-  C: number;
-  E: number;
-  A: number;
-  N: number;
-};
-
-const generateCharacters = (
-  number: number,
-  race: string,
-  gender: Gender
-): Character[] =>
-  Array(number)
-    .fill(null)
-    .map(() => ({
-      name: nameByRace(race, {
-        gender,
-      }) as string,
-      ...(fillObject(
-        { O: null, C: null, E: null, A: null, N: null },
-        randomTrait
-      ) as { O: number; C: number; E: number; A: number; N: number }),
-      need: randomNeed(),
-      cope: randomCope(),
-      identity: randomIdentity(),
-      issue: randomIssue(),
-    }));
-
-const normalizeGender = (gender: string) => {
-  switch (gender) {
-    case "female":
-      return Gender.Female;
-    case "male":
-    default:
-      return Gender.Male;
-  }
-};
-
-const Trait: FunctionComponent<{ trait: number }> = ({ trait }) => (
-  <td className="text-center border-solid border-slate-200 border-2">
-    <span>{formatModifier(trait)}</span>
-  </td>
-);
+const traits = [
+  "Openness",
+  "Conscientiousness",
+  "Extraversion",
+  "Agreeableness",
+  "Neuroticism",
+];
 
 function App() {
   const { race = "human", gender = "male" } = useParams();
@@ -99,14 +17,6 @@ function App() {
   const normalizedGender = normalizeGender(gender);
 
   const characters = generateCharacters(20, race, normalizedGender);
-
-  const traits = [
-    "Openness",
-    "Conscientiousness",
-    "Extraversion",
-    "Agreeableness",
-    "Neuroticism",
-  ];
 
   return (
     <div className="container py-2 text-current">
