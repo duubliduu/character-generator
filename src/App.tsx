@@ -9,7 +9,7 @@ import {
 import Trait from "./Trait";
 import Footer from "./Footer";
 import { useEffect, useState } from "react";
-import { ArrowPathIcon } from "@heroicons/react/24/solid";
+import RecreateButton from "./RecreateButton";
 
 const traits = [
   "Openness",
@@ -78,9 +78,7 @@ function App() {
                   </th>
                 ))}
                 <th>
-                  <button onClick={regenerateAllCharacters}>
-                    <ArrowPathIcon  className="w-4" />
-                  </button>
+                  <RecreateButton onClick={regenerateAllCharacters} />
                 </th>
               </tr>
             </thead>
@@ -103,13 +101,10 @@ function App() {
                     <Trait trait={E} />
                     <Trait trait={A} />
                     <Trait trait={N} />
-                    <td>
-                      <button
-                        className="rounded"
+                    <td className="px-2 py-2">
+                      <RecreateButton
                         onClick={() => regenerateCharacter(index)}
-                      >
-                        <ArrowPathIcon  className="w-4" />
-                      </button>
+                      />
                     </td>
                   </tr>
                 )
