@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
-  Character,
+  Character, formatModifier,
   Gender,
   generateCharacter,
   generateCharacters,
@@ -68,6 +68,7 @@ function App() {
           <table className="table-auto border-collapse">
             <thead>
               <tr>
+                <th>SPD</th>
                 <th>Name</th>
                 {traits.map((trait, index) => (
                   <th key={index} className="sm:w-14 md:w-20 lg:w-32 leading-4">
@@ -89,6 +90,9 @@ function App() {
                   index
                 ) => (
                   <tr key={index}>
+                    <td className="border-solid border-slate-200 border-2 px-2 py-2 text-center">
+                      {formatModifier(O - C + E - A + N)}
+                    </td>
                     <td className="leading-4 border-solid border-slate-200 border-2 px-2 py-2">
                       {name}
                       <br />
