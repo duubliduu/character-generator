@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import {
-  Character, formatModifier,
+  Character,
   Gender,
   generateCharacter,
   generateCharacters,
@@ -91,7 +91,7 @@ function App() {
                 ) => (
                   <tr key={index}>
                     <td className="border-solid border-slate-200 border-2 px-2 py-2 text-center">
-                      {formatModifier(O - C + E - A + N)}
+                      {50 + O - C + E - A + N}
                     </td>
                     <td className="leading-4 border-solid border-slate-200 border-2 px-2 py-2">
                       {name}
