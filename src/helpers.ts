@@ -41,12 +41,7 @@ export const randomIssue = () => {
   return issues.sort(() => Math.random() - 0.5)[0];
 };
 
-export type Character = {
-  name: string;
-  need: string;
-  cope: string;
-  identity: string;
-  issue: string;
+export type Traits = {
   O: number;
   C: number;
   E: number;
@@ -54,19 +49,37 @@ export type Character = {
   N: number;
 };
 
-export const generateCharacter = (race: string, gender: Gender): Character => ({
-  name: nameByRace(race, {
-    gender,
-  }) as string,
-  ...(fillObject(
+export type Character = {
+  name: string;
+  need: string;
+  cope: string;
+  identity: string;
+  issue: string;
+  speed: number;
+} & Traits;
+
+export const generateCharacter = (race: string, gender: Gender): Character => {
+  const traits = fillObject(
     { O: null, C: null, E: null, A: null, N: null },
     randomTrait
-  ) as { O: number; C: number; E: number; A: number; N: number }),
-  need: randomNeed(),
-  cope: randomCope(),
-  identity: randomIdentity(),
-  issue: randomIssue(),
-});
+  ) as Traits;
+
+  const { O, C, E, A, N } = traits;
+
+  const speed = O - C + E - A + N;
+
+  return {
+    name: nameByRace(race, {
+      gender,
+    }) as string,
+    ...traits,
+    need: randomNeed(),
+    cope: randomCope(),
+    identity: randomIdentity(),
+    issue: randomIssue(),
+    speed,
+  };
+};
 
 export const generateCharacters = (
   number: number,

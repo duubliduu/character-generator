@@ -61,6 +61,10 @@ function App() {
     saveCharacters(characters);
   }, [characters]);
 
+  const sortedCharacters = characters.sort((a, b) => {
+    return b.speed - a.speed;
+  });
+
   return (
     <div className="container py-2 text-current">
       <div className="bg-white dark:bg-dark rounded-lg shadow-xl  px-6 py-4 ring-1 ring-slate-200">
@@ -84,7 +88,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {characters.map(
+              {sortedCharacters.map(
                 (
                   { name, O, C, E, A, N, identity, need, cope, issue },
                   index
