@@ -3,11 +3,7 @@ import identities from "./data/identities.json";
 import copes from "./data/copes.json";
 import issues from "./data/issues.json";
 import { nameByRace } from "fantasy-name-generator";
-
-export enum Gender {
-  Male = "male",
-  Female = "female",
-}
+import { Character, Gender, Traits } from "./types";
 
 export const formatModifier = (number: number) =>
   number > 0 ? `+${number}` : number;
@@ -41,23 +37,6 @@ export const randomIssue = () => {
   return issues.sort(() => Math.random() - 0.5)[0];
 };
 
-export type Traits = {
-  O: number;
-  C: number;
-  E: number;
-  A: number;
-  N: number;
-};
-
-export type Character = {
-  name: string;
-  need: string;
-  cope: string;
-  identity: string;
-  issue: string;
-  speed: number;
-} & Traits;
-
 export const generateCharacter = (race: string, gender: Gender): Character => {
   const traits = fillObject(
     { O: null, C: null, E: null, A: null, N: null },
@@ -78,6 +57,8 @@ export const generateCharacter = (race: string, gender: Gender): Character => {
     identity: randomIdentity(),
     issue: randomIssue(),
     speed,
+    race,
+    gender,
   };
 };
 
@@ -99,3 +80,30 @@ export const normalizeGender = (gender: string) => {
       return Gender.Male;
   }
 };
+
+export const localStorageKey = "character-generator";
+
+export const saveCharacters = (characters: Character[]) => {
+  localStorage.setItem(localStorageKey, JSON.stringify(characters));
+};
+
+export const saveCharacter = (character: Character) => {
+  const characters = [character, ...getCharacters()];
+  localStorage.setItem(localStorageKey, JSON.stringify(characters));
+};
+
+export const removeCharacter = (index: number) => {
+  const characters = getCharacters();
+  characters.splice(index, 1);
+  localStorage.setItem(localStorageKey, JSON.stringify([...characters]));
+};
+
+export const getCharacters = (): Character[] => {
+  const storedItem = localStorage.getItem(localStorageKey);
+  return JSON.parse(storedItem || "[]");
+};
+
+export const sortCharacters = (characters: Character[]) =>
+  characters.sort((a, b) => {
+    return b.speed - a.speed;
+  });

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import races from "./data/races.json";
+import races from "../data/races.json";
 import { FunctionComponent } from "react";
-import { Gender } from "./helpers";
+import { Gender } from "../types";
 
 type FooterProps = {
   race: string;

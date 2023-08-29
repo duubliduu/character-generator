@@ -1,22 +1,26 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./App";
+import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Bank from "./components/Bank";
+import CharacterProvider from "./CharacterStore";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/:race" element={<App />} />
-        <Route path="/:race/:gender" element={<App />} />
-        <Route path="*" element={<App />} />
-      </Routes>
-    </BrowserRouter>
+    <CharacterProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/bank" element={<Bank />} />
+          <Route path="*" element={<App />} />
+        </Routes>
+      </BrowserRouter>
+    </CharacterProvider>
   </React.StrictMode>
 );
 
