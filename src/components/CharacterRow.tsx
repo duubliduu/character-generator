@@ -3,7 +3,7 @@ import { Character } from "../types";
 import SaveButton from "./SaveButton";
 import Trait from "./Trait";
 
-type CharacterRowProps = Character & { onClick: () => void };
+type CharacterRowProps = Character & { onClick?: () => void };
 
 const CharacterRow: FunctionComponent<CharacterRowProps> = ({
   name,
@@ -15,6 +15,8 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
   need,
   cope,
   issue,
+  race,
+  gender,
   onClick,
 }) => {
   const handleOnClick: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -24,21 +26,23 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-12 gap-4 py-2">
-      <div className="col-span-1 flex items-center">
-        <Trait trait={O - C + E - A + N} />
+    <div className="grid md:grid-cols-1 lg:grid-cols-12 gap-4 py-2 hover:bg-sky-50">
+      <div className="flex items-center col-span-8">
+        <div className="flex items-center w-10">
+          <Trait trait={O - C + E - A + N} />
+        </div>
+        <div className="w-10">
+          <SaveButton onClick={handleOnClick} />
+        </div>
+        <div className="leading-4">
+          <strong>{name}</strong>, {race} {gender}
+          <br />
+          <span className="text-xs">
+            {cope} <i>hides</i> {issue}, <i>desires</i> {need}
+          </span>
+        </div>
       </div>
-      <div className="col-span-1 ">
-        <SaveButton onClick={handleOnClick} />
-      </div>
-      <div className="leading-4 col-span-6">
-        {name}
-        <br />
-        <span className="text-xs">
-          {cope} <i>hides</i> {issue}, <i>desires</i> {need}
-        </span>
-      </div>
-      <div className="col-span-4 flex items-center justify-between">
+      <div className="flex items-center justify-end col-span-4">
         <Trait trait={O} title="Openness" />
         <Trait trait={C} title="Conscientiousness" />
         <Trait trait={E} title="Extraversion" />

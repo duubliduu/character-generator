@@ -1,24 +1,15 @@
-import { normalizeGender } from "../helpers";
-import React, { ReactEventHandler, useContext } from "react";
 import Layout from "./Layout";
+import Random from "./Random";
+import Bank from "./Bank";
 import races from "../data/races.json";
-import CharacterRow from "./CharacterRow";
-import { CharacterContext } from "../CharacterStore";
-import Table from "./Table";
 import { Gender } from "../types";
+import React, { ReactEventHandler, useContext } from "react";
+import { CharacterContext } from "../CharacterStore";
+import { normalizeGender } from "../helpers";
 
 function App() {
-  const {
-    randomCharacters: characters,
-    save,
-    randomize,
-    race,
-    setRace,
-    gender,
-    setGender,
-  } = useContext(CharacterContext);
-
-  const handleSaveCharacter = (index: number) => save(index);
+  const { randomize, race, setRace, gender, setGender } =
+    useContext(CharacterContext);
 
   const handleSelectRace: ReactEventHandler<HTMLSelectElement> = (event) => {
     setRace(event.currentTarget.value);
@@ -33,7 +24,7 @@ function App() {
   return (
     <Layout>
       <div className="flex">
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <label className="cursor-pointer pr-2">Race</label>
           <select onChange={handleSelectRace} value={race}>
             {races.map((_race, index) => (
@@ -50,17 +41,22 @@ function App() {
               </option>
             ))}
           </select>
+          <button
+            className="ml-4 px-3 py-1 rounded bg-sky-300"
+            onClick={() => randomize()}
+          >
+            Roll
+          </button>
         </div>
       </div>
-      <Table>
-        {characters.map((character, index) => (
-          <CharacterRow
-            key={index}
-            {...character}
-            onClick={() => handleSaveCharacter(index)}
-          />
-        ))}
-      </Table>
+      <div className="flex">
+        <div className="mr-8">
+          <Random />
+        </div>
+        <div className="ml-8">
+          <Bank />
+        </div>
+      </div>
     </Layout>
   );
 }
