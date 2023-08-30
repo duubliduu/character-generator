@@ -8,7 +8,7 @@ type RecreateButtonType = {
 const RecreateButton: FunctionComponent<RecreateButtonType> = ({ onClick }) => {
   return (
     <button onClick={onClick}>
-      <BookmarkIcon className="w-6" />
+      <BookmarkIcon className="w-6 text-slate-400 hover:text-slate-500" />
     </button>
   );
 };

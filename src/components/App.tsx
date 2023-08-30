@@ -3,7 +3,7 @@ import Random from "./Random";
 import Bank from "./Bank";
 import races from "../data/races.json";
 import { Gender } from "../types";
-import React, { ReactEventHandler, useContext } from "react";
+import { ReactEventHandler, useContext } from "react";
 import { CharacterContext } from "../CharacterStore";
 import { normalizeGender } from "../helpers";
 
@@ -23,37 +23,36 @@ function App() {
 
   return (
     <Layout>
-      <div className="flex">
-        <div className="flex justify-between items-center">
-          <label className="cursor-pointer pr-2">Race</label>
-          <select onChange={handleSelectRace} value={race}>
+      <div className="grid grid-cols-4 sm:grid-cols-12 gap-4 rounded border bg-slate-400 p-2">
+        <div className="col-span-4 w-full flex items-center">
+          <label className="cursor-pointer pr-2 hidden sm:block text-white">Race</label>
+          <select onChange={handleSelectRace} value={race} className="w-full p-2 rounded">
             {races.map((_race, index) => (
               <option key={index} value={_race}>
                 {_race}
               </option>
             ))}
           </select>
-          <label className="cursor-pointer px-4">Gender</label>
-          <select onChange={handleSelectGender} value={gender}>
+        </div>
+        <div className="col-span-4 w-full flex items-center">
+          <label className="cursor-pointer  pr-2 hidden sm:block text-white">Gender</label>
+          <select onChange={handleSelectGender} value={gender} className="w-full p-2 rounded">
             {[Gender.Male, Gender.Female].map((_gender, index) => (
               <option key={index} value={_gender}>
                 {_gender}
               </option>
             ))}
           </select>
-          <button
-            className="ml-4 px-3 py-1 rounded bg-sky-300"
-            onClick={() => randomize()}
-          >
-            Roll
-          </button>
         </div>
+        <button className="col-span-4 py-1 rounded border-2 border-white text-white hover:bg-sky-400" onClick={() => randomize()}>
+          Roll
+        </button>
       </div>
-      <div className="flex">
-        <div className="mr-8">
+      <div className="flex flex-col md:flex-row">
+        <div className="md:mr-8">
           <Random />
         </div>
-        <div className="ml-8">
+        <div className="md:ml-8">
           <Bank />
         </div>
       </div>

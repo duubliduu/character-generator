@@ -87,9 +87,15 @@ export const saveCharacters = (characters: Character[]) => {
   localStorage.setItem(localStorageKey, JSON.stringify(characters));
 };
 
-export const saveCharacter = (character: Character) => {
+export const addCharacter = (character: Character) => {
   const characters = [character, ...getCharacters()];
   localStorage.setItem(localStorageKey, JSON.stringify(characters));
+};
+
+export const updateCharacter = (index: number, character: Character) => {
+  const characters = getCharacters();
+  characters[index] = character;
+  localStorage.setItem(localStorageKey, JSON.stringify([...characters]));
 };
 
 export const removeCharacter = (index: number) => {
@@ -107,3 +113,11 @@ export const sortCharacters = (characters: Character[]) =>
   characters.sort((a, b) => {
     return b.speed - a.speed;
   });
+
+export const calculateSpeed = ({
+  O,
+  C,
+  E,
+  A,
+  N,
+}: Pick<Character, "O" | "C" | "E" | "A" | "N">) => O - C + E - A + N;

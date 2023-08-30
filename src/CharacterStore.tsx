@@ -11,14 +11,16 @@ import {
   getCharacters,
   normalizeGender,
   removeCharacter,
-  saveCharacter,
+  addCharacter,
+  updateCharacter,
 } from "./helpers";
 import { Character, Gender } from "./types";
 
 type CharacterStore = {
   randomCharacters: Character[];
   savedCharacters: Character[];
-  save: (index: number) => void;
+  add: (index: number) => void;
+  update: (index: number, character: Character) => void;
   remove: (index: number) => void;
   randomize: () => void;
   race: string;
@@ -30,7 +32,8 @@ type CharacterStore = {
 export const CharacterContext = createContext<CharacterStore>({
   randomCharacters: [],
   savedCharacters: [],
-  save: () => {},
+  add: () => {},
+  update: () => {},
   remove: () => {},
   randomize: () => {},
   race: "human",
@@ -49,10 +52,17 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
   const [race, setRace] = useState<string>("human");
   const [gender, setGender] = useState<Gender>(Gender.Male);
 
-  const save: CharacterStore["save"] = (index) => {
-    const character = randomCharacters[index];
-    saveCharacter(character);
-    setSavedCharacters(getCharacters());
+  const add: CharacterStore["add"] = (index) => {
+    const [character] = randomCharacters.splice(index, 1);
+    addCharacter(character);
+    setRandomRCharacters([...randomCharacters]);
+    setSavedCharacters((state) => [character, ...state]);
+  };
+
+  const update: CharacterStore["update"] = (index, character) => {
+    updateCharacter(index, character);
+    savedCharacters[index] = character;
+    setSavedCharacters([...savedCharacters]);
   };
 
   const remove: CharacterStore["remove"] = (index: number) => {
@@ -74,7 +84,8 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
       value={{
         randomCharacters,
         savedCharacters,
-        save,
+        add,
+        update,
         remove,
         randomize,
         race,
