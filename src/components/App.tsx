@@ -8,7 +8,7 @@ import { CharacterContext } from "../CharacterStore";
 import { normalizeGender } from "../helpers";
 
 function App() {
-  const { randomize, race, setRace, gender, setGender } =
+  const { randomize, race, setRace, gender, setGender, setAbsolute, absolute } =
     useContext(CharacterContext);
 
   const handleSelectRace: ReactEventHandler<HTMLSelectElement> = (event) => {
@@ -25,8 +25,14 @@ function App() {
     <Layout>
       <div className="grid grid-cols-4 sm:grid-cols-12 gap-4 rounded border bg-slate-400 p-2">
         <div className="col-span-4 w-full flex items-center">
-          <label className="cursor-pointer pr-2 hidden sm:block text-white">Race</label>
-          <select onChange={handleSelectRace} value={race} className="w-full p-2 rounded">
+          <label className="cursor-pointer pr-2 hidden sm:block text-white">
+            Race
+          </label>
+          <select
+            onChange={handleSelectRace}
+            value={race}
+            className="w-full p-2 rounded"
+          >
             {races.map((_race, index) => (
               <option key={index} value={_race}>
                 {_race}
@@ -35,8 +41,14 @@ function App() {
           </select>
         </div>
         <div className="col-span-4 w-full flex items-center">
-          <label className="cursor-pointer  pr-2 hidden sm:block text-white">Gender</label>
-          <select onChange={handleSelectGender} value={gender} className="w-full p-2 rounded">
+          <label className="cursor-pointer  pr-2 hidden sm:block text-white">
+            Gender
+          </label>
+          <select
+            onChange={handleSelectGender}
+            value={gender}
+            className="w-full p-2 rounded"
+          >
             {[Gender.Male, Gender.Female].map((_gender, index) => (
               <option key={index} value={_gender}>
                 {_gender}
@@ -44,8 +56,16 @@ function App() {
             ))}
           </select>
         </div>
-        <button className="col-span-4 py-1 rounded border-2 border-white text-white hover:bg-sky-400" onClick={() => randomize()}>
+        <button
+          className="col-span-4 py-1 rounded border-2 border-white text-white hover:bg-sky-400"
+          onClick={() => randomize()}
+        >
           Roll
+        </button>
+      </div>
+      <div>
+        <button onClick={() => setAbsolute(!absolute)}>
+          Toggle absolute values: {absolute ? "on" : "off"}
         </button>
       </div>
       <div className="flex flex-col md:flex-row">

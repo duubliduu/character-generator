@@ -27,6 +27,8 @@ type CharacterStore = {
   setRace: (race: string) => void;
   gender: Gender;
   setGender: (gender: Gender) => void;
+  absolute: boolean;
+  setAbsolute: (absolute: boolean) => void;
 };
 
 export const CharacterContext = createContext<CharacterStore>({
@@ -40,6 +42,8 @@ export const CharacterContext = createContext<CharacterStore>({
   setRace: () => {},
   gender: Gender.Male,
   setGender: () => {},
+  absolute: false,
+  setAbsolute: () => {},
 });
 
 const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
@@ -51,6 +55,7 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
   );
   const [race, setRace] = useState<string>("human");
   const [gender, setGender] = useState<Gender>(Gender.Male);
+  const [absolute, setAbsolute] = useState<boolean>(false);
 
   const add: CharacterStore["add"] = (index) => {
     const [character] = randomCharacters.splice(index, 1);
@@ -92,6 +97,8 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
         setRace,
         gender: normalizeGender(gender),
         setGender,
+        absolute,
+        setAbsolute,
       }}
     >
       {children}
