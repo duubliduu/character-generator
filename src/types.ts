@@ -20,4 +20,17 @@ export type Character = {
   speed: number;
   race: string;
   gender: Gender;
+  tree?: Couple;
+} & Traits;
+
+export type Couple = {
+  left: Member;
+  right?: Member;
+  children: Couple[];
+};
+
+export type Member = {
+  name: string;
+  gender: Gender;
+  race: string;
 } & Traits;

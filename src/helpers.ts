@@ -37,20 +37,35 @@ export const randomIssue = () => {
   return issues.sort(() => Math.random() - 0.5)[0];
 };
 
-export const generateCharacter = (race: string, gender: Gender): Character => {
-  const traits = fillObject(
+export const randomTraits = () => {
+  return fillObject(
     { O: null, C: null, E: null, A: null, N: null },
     randomTrait
   ) as Traits;
+};
 
-  const { O, C, E, A, N } = traits;
+export const randomName = (race = "human", gender = Gender.Male) => {
+  const name = nameByRace(race, {
+    gender,
+  });
 
-  const speed = O - C + E - A + N;
+  if (typeof name !== "string") {
+    throw new Error("Name is not a string");
+  }
+
+  return name;
+};
+
+export const randomGender = () => {
+  return [Gender.Male, Gender.Female].sort(() => Math.random() - 0.5)[0];
+};
+
+export const generateCharacter = (race: string, gender: Gender): Character => {
+  const traits = randomTraits();
+  const speed = calculateSpeed(traits);
 
   return {
-    name: nameByRace(race, {
-      gender,
-    }) as string,
+    name: randomName(race, gender),
     ...traits,
     need: randomNeed(),
     cope: randomCope(),
@@ -114,10 +129,43 @@ export const sortCharacters = (characters: Character[]) =>
     return b.speed - a.speed;
   });
 
-export const calculateSpeed = ({
-  O,
-  C,
-  E,
-  A,
-  N,
-}: Pick<Character, "O" | "C" | "E" | "A" | "N">) => O - C + E - A + N;
+export const calculateSpeed = ({ O, C, E, A, N }: Traits) => O - C + E - A + N;
+
+export const splitTraits = (traits: Traits): Traits[] => {
+  const { O, C, E, A, N } = traits;
+  return Object.entries({ O, C, E, A, N }).reduce(
+    ([left, right], [key, value]) => {
+      if (Math.random() - 0.5) {
+        return [
+          { ...left, [key]: value },
+          { ...right, [key]: randomTrait() },
+        ];
+      }
+      return [
+        { ...left, [key]: randomTrait() },
+        { ...right, [key]: value },
+      ];
+    },
+    [{} as Traits, {} as Traits]
+  );
+};
+
+export const combineTraits = (left: Traits, right: Traits) => {
+  const keys: Array<keyof Traits> = ["O", "C", "E", "A", "N"];
+  return keys.reduce((traits, key) => {
+    if (Math.random() > 0.5) {
+      return {
+        ...traits,
+        [key]: left[key],
+      };
+    }
+
+    return {
+      ...traits,
+      [key]: right[key],
+    };
+  }, {} as Traits);
+};
+
+export const oppositeGender = (gender: Gender) =>
+  gender === Gender.Female ? Gender.Male : Gender.Female;

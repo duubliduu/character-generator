@@ -2,12 +2,13 @@ import {
   ChangeEventHandler,
   FunctionComponent,
   useContext,
+  useRef,
   useState,
 } from "react";
 import Layout from "./Layout";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CharacterContext } from "../CharacterStore";
-import { Character, Gender } from "../types";
+import { Character, Couple, Gender } from "../types";
 import copes from "../data/copes.json";
 import identities from "../data/identities.json";
 import issues from "../data/issues.json";
@@ -16,6 +17,7 @@ import races from "../data/races.json";
 import RandomizeButton from "./RandomizeButton";
 import { nameByRace } from "fantasy-name-generator";
 import { calculateSpeed } from "../helpers";
+import Family from "./Family";
 
 const Form: FunctionComponent = () => {
   const { savedCharacters, update } = useContext(CharacterContext);
@@ -26,24 +28,49 @@ const Form: FunctionComponent = () => {
 
   const [data, setData] = useState<Character>(character);
 
-  if (!index) {
-    return null;
-  }
-
   const handleChange =
-    (key: keyof Character): ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
+    (
+      key: keyof Character
+    ): ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
     (event) => {
       setData({ ...data, [key]: event.target.value });
     };
 
   const handleSave = () => {
+    data.tree = treeRef.current;
     update(Number(index), data);
     navigate("/");
   };
 
+  const handleCancel = () => {
+    navigate("/");
+  };
+
   // Dropdowns
-  const { name, need, cope, gender, race, identity, issue, speed, ...rest } =
-    data;
+  const {
+    name,
+    need,
+    cope,
+    gender,
+    race,
+    identity,
+    issue,
+    speed,
+    tree,
+    ...rest
+  } = data;
+
+  const treeRef = useRef<Couple | undefined>(
+    tree || {
+      children: [],
+      left: {
+        gender,
+        name,
+        race,
+        ...rest,
+      },
+    }
+  );
 
   const handleRandomizeName = () => {
     const randomName = nameByRace(race, {
@@ -66,16 +93,16 @@ const Form: FunctionComponent = () => {
         />
         <select className="p-1" value={race} onChange={handleChange("race")}>
           {races.map((item, index) => (
-            <option key={index}>
-              {item}
-            </option>
+            <option key={index}>{item}</option>
           ))}
         </select>
-        <select className="p-1" value={race} onChange={handleChange("gender")}>
+        <select
+          className="p-1"
+          value={gender}
+          onChange={handleChange("gender")}
+        >
           {[Gender.Male, Gender.Female].map((item, index) => (
-            <option key={index}>
-              {item}
-            </option>
+            <option key={index}>{item}</option>
           ))}
         </select>
         <select
@@ -84,9 +111,7 @@ const Form: FunctionComponent = () => {
           onChange={handleChange("identity")}
         >
           {identities.map((item, index) => (
-            <option key={index}>
-              {item}
-            </option>
+            <option key={index}>{item}</option>
           ))}
         </select>
         <div className="pl-2 flex items-center">
@@ -151,10 +176,22 @@ const Form: FunctionComponent = () => {
           ))}
         </select>
       </div>
+      <div className="flex justify-center">
+        <Family
+          name={name}
+          gender={gender}
+          race={race}
+          {...rest}
+          treeRef={treeRef}
+        />
+      </div>
       <div className="flex justify-between pt-4">
-        <Link to="/" className="rounded bg-slate-200 py-2 px-4">
+        <button
+          onClick={handleCancel}
+          className="rounded bg-slate-200 py-2 px-4"
+        >
           Cancel
-        </Link>
+        </button>
         <button onClick={handleSave} className="rounded bg-slate-200 py-2 px-4">
           Save
         </button>
