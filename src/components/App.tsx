@@ -6,10 +6,20 @@ import { Gender } from "../types";
 import { ReactEventHandler, useContext } from "react";
 import { CharacterContext } from "../CharacterStore";
 import { normalizeGender } from "../helpers";
+import Modal from "react-modal";
 
 function App() {
-  const { randomize, race, setRace, gender, setGender, setAbsolute, absolute } =
-    useContext(CharacterContext);
+  const {
+    randomize,
+    race,
+    setRace,
+    gender,
+    setGender,
+    setAbsolute,
+    absolute,
+    isMigrated,
+    migrate,
+  } = useContext(CharacterContext);
 
   const handleSelectRace: ReactEventHandler<HTMLSelectElement> = (event) => {
     setRace(event.currentTarget.value);
@@ -20,6 +30,23 @@ function App() {
     setGender(normalizeGender(event.currentTarget.value));
     randomize();
   };
+
+  if (!isMigrated) {
+    return (
+      <Modal isOpen>
+        <div className="flex flex-col items-center justify-center">
+          <p className="py-4 text-center">
+            Storage is in outdated format.
+            <br />
+            Migration is needed.
+          </p>
+          <button onClick={migrate} className="p-4 border-2 rounded">
+            Migrate storage
+          </button>
+        </div>
+      </Modal>
+    );
+  }
 
   return (
     <Layout>
@@ -57,7 +84,7 @@ function App() {
           </select>
         </div>
         <button
-          className="col-span-4 py-1 rounded border-2 border-white text-white hover:bg-sky-400"
+          className="col-span-4 py-1 rounded border-2 border-white text-white hover:bg-slate-300 active:bg-slate-500"
           onClick={() => randomize()}
         >
           Roll

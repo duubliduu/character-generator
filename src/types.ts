@@ -34,3 +34,9 @@ export type Member = {
   gender: Gender;
   race: string;
 } & Traits;
+
+export type Storage = {
+  characters: Character[];
+  archived: Character[];
+  settings: { randomSet: boolean };
+};

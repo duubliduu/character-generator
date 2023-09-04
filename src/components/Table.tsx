@@ -1,12 +1,25 @@
 import { FunctionComponent, PropsWithChildren } from "react";
+import PrintButton from "./PrintButton";
 
-const Table: FunctionComponent<PropsWithChildren> = ({ children }) => {
+type TableProps = PropsWithChildren<{
+  onPrint?: () => void;
+}>;
+
+const Table: FunctionComponent<TableProps> = ({ children, onPrint }) => {
+  const handlePrint = () => {
+    if (typeof onPrint === "function") {
+      onPrint();
+    }
+  };
+
   return (
     <div>
       <div className="grid grid-cols-12 gap-4 py-2">
         <div className="flex col-span-8">
-          <div className="w-10">SPD</div>
-          <div className="w-10">Save</div>
+          <div className="w-10">
+            <PrintButton onClick={handlePrint} />
+          </div>
+          <div className="w-10">SP</div>
           <div>Name</div>
         </div>
         <div className="flex justify-end col-span-4">

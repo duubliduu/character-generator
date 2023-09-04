@@ -13,6 +13,7 @@ import {
   removeCharacter,
   addCharacter,
   updateCharacter,
+  LOCAL_STORAGE_KEY,
 } from "./helpers";
 import { Character, Gender } from "./types";
 
@@ -29,6 +30,8 @@ type CharacterStore = {
   setGender: (gender: Gender) => void;
   absolute: boolean;
   setAbsolute: (absolute: boolean) => void;
+  isMigrated: boolean;
+  migrate: () => void;
 };
 
 export const CharacterContext = createContext<CharacterStore>({
@@ -44,6 +47,8 @@ export const CharacterContext = createContext<CharacterStore>({
   setGender: () => {},
   absolute: false,
   setAbsolute: () => {},
+  isMigrated: false,
+  migrate: () => {},
 });
 
 const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
@@ -56,6 +61,9 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
   const [race, setRace] = useState<string>("human");
   const [gender, setGender] = useState<Gender>(Gender.Male);
   const [absolute, setAbsolute] = useState<boolean>(false);
+  const [isMigrated, setIsMigrated] = useState<boolean>(
+    !Array.isArray(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || ""))
+  );
 
   const add: CharacterStore["add"] = (index) => {
     const [character] = randomCharacters.splice(index, 1);
@@ -80,6 +88,23 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
     setRandomRCharacters(characters);
   }, [race, gender]);
 
+  const migrate = () => {
+    const storage: Storage | Array<Character> = JSON.parse(
+      localStorage.getItem(LOCAL_STORAGE_KEY) || "{}"
+    );
+
+    if (Array.isArray(storage)) {
+      localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify({ characters: storage, settings: { randomSet: false } })
+      );
+      setIsMigrated(true);
+      return;
+    }
+
+    setIsMigrated(true);
+  };
+
   useEffect(() => {
     randomize();
   }, [randomize, race, gender]);
@@ -99,6 +124,8 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
         setGender,
         absolute,
         setAbsolute,
+        isMigrated,
+        migrate,
       }}
     >
       {children}

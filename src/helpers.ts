@@ -3,14 +3,16 @@ import identities from "./data/identities.json";
 import copes from "./data/copes.json";
 import issues from "./data/issues.json";
 import { nameByRace } from "fantasy-name-generator";
-import { Character, Gender, Traits } from "./types";
+import { Character, Gender, Storage, Traits } from "./types";
 
 export const formatModifier = (number: number) =>
   number > 0 ? `+${number}` : number;
 
 export const rollD4 = () => Math.ceil(Math.random() * 4);
 
-export const randomTrait = () => rollD4() - rollD4();
+export const rollD6 = () => Math.floor(Math.random() * 6);
+
+export const randomTrait = () => rollD6() + rollD6() + rollD6() + rollD6() - 14;
 
 export const fillObject = (object: Record<string, any>, fill: () => any) => {
   return Object.keys(object).reduce((a, c) => {
@@ -37,11 +39,33 @@ export const randomIssue = () => {
   return issues.sort(() => Math.random() - 0.5)[0];
 };
 
-export const randomTraits = () => {
-  return fillObject(
-    { O: null, C: null, E: null, A: null, N: null },
-    randomTrait
-  ) as Traits;
+const traitSet: Traits = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+
+const getSettings = (): Storage["settings"] => {
+  const storage = getStorage();
+
+  if (Array.isArray(storage)) {
+    return { randomSet: false };
+  }
+
+  return storage.settings;
+};
+
+export const randomTraits = (): Traits => {
+  const { randomSet } = getSettings();
+
+  if (randomSet) {
+    const randomSet: number[] = randomizeSet();
+    const traits = traitSet;
+
+    for (const key in traits) {
+      traits[key as keyof Traits] = randomSet.shift() as Traits[keyof Traits];
+    }
+
+    return traits;
+  }
+
+  return fillObject(traitSet, randomTrait) as Traits;
 };
 
 export const randomName = (race = "human", gender = Gender.Male) => {
@@ -96,32 +120,60 @@ export const normalizeGender = (gender: string) => {
   }
 };
 
-export const localStorageKey = "character-generator";
+export const LOCAL_STORAGE_KEY = "character-generator";
+
+const getStorage = (): Storage | Character[] =>
+  JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]");
+
+const setStorage = (payload: Partial<Storage>) => {
+  const stored = getStorage();
+
+  if (Array.isArray(stored)) {
+    localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify({
+        characters: stored,
+        settings: getSettings(),
+        ...payload,
+      })
+    );
+  }
+
+  localStorage.setItem(
+    LOCAL_STORAGE_KEY,
+    JSON.stringify({ ...stored, ...payload })
+  );
+};
 
 export const saveCharacters = (characters: Character[]) => {
-  localStorage.setItem(localStorageKey, JSON.stringify(characters));
+  setStorage({ characters });
 };
 
 export const addCharacter = (character: Character) => {
   const characters = [character, ...getCharacters()];
-  localStorage.setItem(localStorageKey, JSON.stringify(characters));
+  setStorage({ characters });
 };
 
 export const updateCharacter = (index: number, character: Character) => {
   const characters = getCharacters();
   characters[index] = character;
-  localStorage.setItem(localStorageKey, JSON.stringify([...characters]));
+  setStorage({ characters });
 };
 
 export const removeCharacter = (index: number) => {
   const characters = getCharacters();
-  characters.splice(index, 1);
-  localStorage.setItem(localStorageKey, JSON.stringify([...characters]));
+  const archived = characters.splice(index, 1);
+  setStorage({ characters, archived });
 };
 
 export const getCharacters = (): Character[] => {
-  const storedItem = localStorage.getItem(localStorageKey);
-  return JSON.parse(storedItem || "[]");
+  const storage = getStorage();
+
+  if (Array.isArray(storage)) {
+    return storage;
+  }
+
+  return storage.characters;
 };
 
 export const sortCharacters = (characters: Character[]) =>
@@ -169,3 +221,35 @@ export const combineTraits = (left: Traits, right: Traits) => {
 
 export const oppositeGender = (gender: Gender) =>
   gender === Gender.Female ? Gender.Male : Gender.Female;
+
+const set = [3, 1, 1, 2, 2];
+
+export const randomizeSet = (): number[] => {
+  const [primary, ...rest] = set;
+
+  const randomizedSet = rest
+    .sort(() => Math.random() - 0.5)
+    .map((a) => (Math.random() < 0.5 ? -a : a));
+
+  const firstTree = randomizedSet.splice(0, 3);
+
+  const firstTreeWithPrimary = [primary, ...firstTree]
+    .sort(() => Math.random() - 0.5)
+    .map((a) => (Math.random() < 0.5 ? -a : a));
+
+  return [...firstTreeWithPrimary, ...randomizedSet];
+};
+
+export const downloadAsCsv = (characters: Character[]) => {
+  const headers: string[] = Object.keys(characters[0]);
+  const rows: string[][] = characters.map(
+    (character) => Object.values(character) as string[]
+  );
+
+  const csvContent =
+    "data:text/csv;charset=utf-8," +
+    [headers, ...rows].map((row) => row.join(",")).join("\n");
+  const encodedUri = encodeURI(csvContent);
+
+  window.open(encodedUri);
+};
