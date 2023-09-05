@@ -10,9 +10,14 @@ export const formatModifier = (number: number) =>
 
 export const rollD4 = () => Math.ceil(Math.random() * 4);
 
-export const rollD6 = () => Math.floor(Math.random() * 6);
+export const rollD6MinusOne = () => Math.floor(Math.random() * 6) - 1;
 
-export const randomTrait = () => rollD6() + rollD6() + rollD6() + rollD6() - 14;
+export const randomTrait = () =>
+  rollD6MinusOne() +
+  rollD6MinusOne() +
+  rollD6MinusOne() +
+  rollD6MinusOne() -
+  10;
 
 export const fillObject = (object: Record<string, any>, fill: () => any) => {
   return Object.keys(object).reduce((a, c) => {
