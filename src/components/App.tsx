@@ -15,10 +15,10 @@ function App() {
     setRace,
     gender,
     setGender,
-    setAbsolute,
-    absolute,
     isMigrated,
     migrate,
+    toggleSetting,
+    settings,
   } = useContext(CharacterContext);
 
   const handleSelectRace: ReactEventHandler<HTMLSelectElement> = (event) => {
@@ -52,7 +52,7 @@ function App() {
     <Layout>
       <div className="grid grid-cols-4 sm:grid-cols-12 gap-4 rounded border bg-slate-400 p-2">
         <div className="col-span-4 w-full flex items-center">
-          <label className="cursor-pointer pr-2 hidden sm:block text-white">
+          <label className="cursor-pointer pr-2 hidden md:block text-white">
             Race
           </label>
           <select
@@ -68,7 +68,7 @@ function App() {
           </select>
         </div>
         <div className="col-span-4 w-full flex items-center">
-          <label className="cursor-pointer  pr-2 hidden sm:block text-white">
+          <label className="cursor-pointer pr-2 hidden md:block text-white">
             Gender
           </label>
           <select
@@ -83,16 +83,23 @@ function App() {
             ))}
           </select>
         </div>
-        <button
-          className="col-span-4 py-1 rounded border-2 border-white text-white hover:bg-slate-300 active:bg-slate-500"
-          onClick={() => randomize()}
-        >
-          Roll
-        </button>
+        <div className="col-span-2 flex justify-center items-center">
+          <button className="text-white leading-4" onClick={() => toggleSetting("randomSet")}>
+            {settings.randomSet ? "Standard set" : "Random set"}
+          </button>
+        </div>
+        <div className="col-span-2">
+          <button
+            className="py-1 rounded w-full border-2 border-white text-white hover:bg-slate-300 active:bg-slate-500"
+            onClick={() => randomize()}
+          >
+            Roll
+          </button>
+        </div>
       </div>
       <div>
-        <button onClick={() => setAbsolute(!absolute)}>
-          Toggle absolute values: {absolute ? "on" : "off"}
+        <button onClick={() => toggleSetting("absoluteValues")}>
+          Toggle absolute values: {settings.absoluteValues ? "on" : "off"}
         </button>
       </div>
       <div className="flex flex-col md:flex-row">

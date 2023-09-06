@@ -38,5 +38,5 @@ export type Member = {
 export type Storage = {
   characters: Character[];
   archived: Character[];
-  settings: { randomSet: boolean };
+  settings: { randomSet: boolean; absoluteValues: boolean };
 };

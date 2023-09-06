@@ -2,6 +2,8 @@ import needs from "./data/needs.json";
 import identities from "./data/identities.json";
 import copes from "./data/copes.json";
 import issues from "./data/issues.json";
+import classes from "./data/classes.json";
+
 import { nameByRace } from "fantasy-name-generator";
 import { Character, Gender, Storage, Traits } from "./types";
 
@@ -36,6 +38,35 @@ export const randomIdentity = () => {
   return identities.sort(() => Math.random() - 0.5)[0];
 };
 
+export const orderTraits = (traits: Partial<Traits>) =>
+  Object.entries<number>(traits)
+    .sort(() => Math.random() - 0.5)
+    .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+
+export const flattenTrait = ([key, value]: [string, number]) => {
+  if (value < 0) {
+    return `Lo${key}`;
+  }
+  return `Hi${key}`;
+};
+
+export const determineMetaClass = (traits: Traits) => {
+  const { N, ...rest } = traits;
+  const [first, second] = orderTraits(rest);
+  const key = [first, second]
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(flattenTrait)
+    .join("-");
+
+  const metaClass = (classes as Record<string, string>)[key];
+
+  if (!metaClass) {
+    return key;
+  }
+
+  return metaClass;
+};
+
 export const randomCope = () => {
   return copes.sort(() => Math.random() - 0.5)[0];
 };
@@ -46,11 +77,11 @@ export const randomIssue = () => {
 
 const traitSet: Traits = { O: 0, C: 0, E: 0, A: 0, N: 0 };
 
-const getSettings = (): Storage["settings"] => {
+export const getSettings = (): Storage["settings"] => {
   const storage = getStorage();
 
   if (Array.isArray(storage)) {
-    return { randomSet: false };
+    return { randomSet: false, absoluteValues: false };
   }
 
   return storage.settings;
@@ -98,7 +129,7 @@ export const generateCharacter = (race: string, gender: Gender): Character => {
     ...traits,
     need: randomNeed(),
     cope: randomCope(),
-    identity: randomIdentity(),
+    identity: determineMetaClass(traits), // randomIdentity(),
     issue: randomIssue(),
     speed,
     race,
@@ -257,4 +288,16 @@ export const downloadAsCsv = (characters: Character[]) => {
   const encodedUri = encodeURI(csvContent);
 
   window.open(encodedUri);
+};
+
+export const updateSettings = (newSettings: Storage["settings"]) => {
+  const storage = getStorage();
+
+  if (Array.isArray(storage)) {
+    throw new Error("Storage does not support settings");
+  }
+
+  const { settings: oldSettings } = storage;
+
+  setStorage({ settings: { ...oldSettings, ...newSettings } });
 };

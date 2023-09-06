@@ -14,8 +14,10 @@ import {
   addCharacter,
   updateCharacter,
   LOCAL_STORAGE_KEY,
+  getSettings,
+  updateSettings,
 } from "./helpers";
-import { Character, Gender } from "./types";
+import { Character, Gender, Storage } from "./types";
 
 type CharacterStore = {
   randomCharacters: Character[];
@@ -28,10 +30,10 @@ type CharacterStore = {
   setRace: (race: string) => void;
   gender: Gender;
   setGender: (gender: Gender) => void;
-  absolute: boolean;
-  setAbsolute: (absolute: boolean) => void;
   isMigrated: boolean;
   migrate: () => void;
+  toggleSetting: (setting: keyof Storage["settings"]) => void;
+  settings: Storage["settings"];
 };
 
 export const CharacterContext = createContext<CharacterStore>({
@@ -45,10 +47,10 @@ export const CharacterContext = createContext<CharacterStore>({
   setRace: () => {},
   gender: Gender.Male,
   setGender: () => {},
-  absolute: false,
-  setAbsolute: () => {},
   isMigrated: false,
   migrate: () => {},
+  toggleSetting: () => {},
+  settings: { randomSet: false, absoluteValues: false },
 });
 
 const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
@@ -60,10 +62,10 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
   );
   const [race, setRace] = useState<string>("human");
   const [gender, setGender] = useState<Gender>(Gender.Male);
-  const [absolute, setAbsolute] = useState<boolean>(false);
   const [isMigrated, setIsMigrated] = useState<boolean>(
     !Array.isArray(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || ""))
   );
+  const [settings, setSettings] = useState<Storage["settings"]>(getSettings());
 
   const add: CharacterStore["add"] = (index) => {
     const [character] = randomCharacters.splice(index, 1);
@@ -105,6 +107,14 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
     setIsMigrated(true);
   };
 
+  const toggleSetting: CharacterStore["toggleSetting"] = (setting) => {
+    setSettings((state) => ({ ...state, [setting]: !state[setting] }));
+    updateSettings({
+      ...settings,
+      [setting]: !settings[setting],
+    });
+  };
+
   useEffect(() => {
     randomize();
   }, [randomize, race, gender]);
@@ -122,10 +132,10 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
         setRace,
         gender: normalizeGender(gender),
         setGender,
-        absolute,
-        setAbsolute,
         isMigrated,
         migrate,
+        toggleSetting,
+        settings,
       }}
     >
       {children}
