@@ -20,6 +20,7 @@ export type Character = {
   speed: number;
   race: string;
   gender: Gender;
+  background: string;
   tree?: Couple;
 } & Traits;
 

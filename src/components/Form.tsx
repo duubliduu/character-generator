@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { CharacterContext } from "../CharacterStore";
 import { Character, Couple, Gender } from "../types";
 import copes from "../data/copes.json";
-import identities from "../data/identities.json";
+import classes from "../data/classes.json";
 import issues from "../data/issues.json";
 import needs from "../data/needs.json";
 import races from "../data/races.json";
@@ -110,7 +110,7 @@ const Form: FunctionComponent = () => {
           value={identity}
           onChange={handleChange("identity")}
         >
-          {identities.map((item, index) => (
+          {Object.values(classes).map((item, index) => (
             <option key={index}>{item}</option>
           ))}
         </select>

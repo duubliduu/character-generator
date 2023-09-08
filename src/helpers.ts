@@ -1,16 +1,14 @@
 import needs from "./data/needs.json";
-import identities from "./data/identities.json";
 import copes from "./data/copes.json";
 import issues from "./data/issues.json";
 import classes from "./data/classes.json";
+import backgrounds from "./data/backgrounds.json";
 
 import { nameByRace } from "fantasy-name-generator";
 import { Character, Gender, Storage, Traits } from "./types";
 
 export const formatModifier = (number: number) =>
   number > 0 ? `+${number}` : number;
-
-export const rollD4 = () => Math.ceil(Math.random() * 4);
 
 export const rollD6MinusOne = () => Math.floor(Math.random() * 6) - 1;
 
@@ -30,17 +28,17 @@ export const fillObject = (object: Record<string, any>, fill: () => any) => {
   }, {});
 };
 
-export const randomNeed = () => {
-  return needs.sort(() => Math.random() - 0.5)[0];
-};
+export const random = () => Math.random() - 0.5;
 
-export const randomIdentity = () => {
-  return identities.sort(() => Math.random() - 0.5)[0];
+export const randomOne = (items: any[]) => items.sort(random)[0];
+
+export const randomNeed = () => {
+  return randomOne(needs);
 };
 
 export const orderTraits = (traits: Partial<Traits>) =>
   Object.entries<number>(traits)
-    .sort(() => Math.random() - 0.5)
+    .sort(random)
     .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
 
 export const flattenTrait = ([key, value]: [string, number]) => {
@@ -67,13 +65,9 @@ export const determineMetaClass = (traits: Traits) => {
   return metaClass;
 };
 
-export const randomCope = () => {
-  return copes.sort(() => Math.random() - 0.5)[0];
-};
+export const randomCope = () => randomOne(copes);
 
-export const randomIssue = () => {
-  return issues.sort(() => Math.random() - 0.5)[0];
-};
+export const randomIssue = () => randomOne(issues);
 
 const traitSet: Traits = { O: 0, C: 0, E: 0, A: 0, N: 0 };
 
@@ -120,6 +114,8 @@ export const randomGender = () => {
   return [Gender.Male, Gender.Female].sort(() => Math.random() - 0.5)[0];
 };
 
+export const randomBackground = () => randomOne(backgrounds);
+
 export const generateCharacter = (race: string, gender: Gender): Character => {
   const traits = randomTraits();
   const speed = calculateSpeed(traits);
@@ -134,6 +130,7 @@ export const generateCharacter = (race: string, gender: Gender): Character => {
     speed,
     race,
     gender,
+    background: randomBackground(),
   };
 };
 

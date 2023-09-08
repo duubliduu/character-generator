@@ -22,6 +22,7 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
   actionButton = null,
   onClick = () => {},
   identity,
+    background,
 }) => {
   const handleEditCharacter = () => {
     onClick();
@@ -39,7 +40,7 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
             <Trait trait={O - C + E - A + N} />
           </div>
           <div className="leading-4">
-            <strong>{name}</strong>, {race} {gender} {identity}
+            <strong>{name}</strong>, {race} {gender} {identity} {background}
             <br />
             <span className="text-xs">
               {cope} <i>hides</i> {issue}, <i>desires</i> {need}
