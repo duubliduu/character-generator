@@ -13,7 +13,7 @@
   "LoA-LoO": "Warrior",
   "HiC-HiE": "Elite",
   "HiC-LoE": "Solo",
-  "HiA-HiC": "Martyr",
+  "HiA-HiC": "Healer",
   "LoA-HiC": "Ruler",
   "LoC-HiE": "Jester",
   "LoC-LoE": "Trickster",
@@ -21,6 +21,6 @@
   "LoA-LoC": "Cutthroat",
   "HiA-HiE": "Socialite",
   "LoA-HiE": "Conqueror",
-  "HiA-LoE": "Whisper",
+  "HiA-LoE": "Support",
   "LoA-LoE": "Shadow"
 }
