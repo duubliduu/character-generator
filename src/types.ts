@@ -3,13 +3,16 @@ export enum Gender {
   Female = "female",
 }
 
-export type Traits = {
-  O: number;
-  C: number;
-  E: number;
-  A: number;
-  N: number;
-};
+export enum Trait {
+  H = "H",
+  N = "N",
+  E = "E",
+  A = "A",
+  C = "C",
+  O = "O",
+}
+
+export type Traits = Record<Trait, number>;
 
 export type Character = {
   name: string;

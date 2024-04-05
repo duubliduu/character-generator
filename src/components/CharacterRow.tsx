@@ -11,9 +11,10 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
   name,
   O,
   C,
-  E,
+  E: X,
   A,
-  N,
+  N: E,
+  H,
   need,
   cope,
   issue,
@@ -22,7 +23,7 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
   actionButton = null,
   onClick = () => {},
   identity,
-    background,
+  background,
 }) => {
   const handleEditCharacter = () => {
     onClick();
@@ -37,22 +38,25 @@ const CharacterRow: FunctionComponent<CharacterRowProps> = ({
       >
         <div className="flex items-center col-span-8">
           <div className="flex items-center w-10">
-            <Trait trait={O - C + E - A + N} />
+            <Trait trait={O - C + X - A + E} />
           </div>
           <div className="leading-4">
             <strong>{name}</strong>, {race} {gender} {identity} {background}
             <br />
             <span className="text-xs">
-              {cope} <i>hides</i> {issue}, <i>desires</i> {need}
+              <span title="Need">{need}</span> /{" "}
+              <span title="Wound">{issue}</span> /{" "}
+              <span title="Cope">{cope}</span>
             </span>
           </div>
         </div>
         <div className="flex items-center justify-end col-span-4">
-          <Trait trait={O} title="Openness" />
-          <Trait trait={C} title="Conscientiousness" />
-          <Trait trait={E} title="Extraversion" />
+          <Trait trait={H} title="Honesty" />
+          <Trait trait={E} title="Emotionality" />
+          <Trait trait={X} title="Extraversion" />
           <Trait trait={A} title="Agreeableness" />
-          <Trait trait={N} title="Neuroticism" />
+          <Trait trait={C} title="Conscientiousness" />
+          <Trait trait={O} title="Openness" />
         </div>
       </div>
     </div>

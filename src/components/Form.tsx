@@ -8,7 +8,7 @@ import {
 import Layout from "./Layout";
 import { useNavigate, useParams } from "react-router-dom";
 import { CharacterContext } from "../CharacterStore";
-import { Character, Couple, Gender } from "../types";
+import { Character, Couple, Gender, Trait, Traits } from "../types";
 import copes from "../data/copes.json";
 import classes from "../data/classes.json";
 import issues from "../data/issues.json";
@@ -30,10 +30,11 @@ const Form: FunctionComponent = () => {
 
   const handleChange =
     (
-      key: keyof Character
+      key: keyof Character,
+      transform: (value: any) => any = (value) => value
     ): ChangeEventHandler<HTMLInputElement | HTMLSelectElement> =>
     (event) => {
-      setData({ ...data, [key]: event.target.value });
+      setData({ ...data, [key]: transform(event.target.value) });
     };
 
   const handleSave = () => {
@@ -57,6 +58,7 @@ const Form: FunctionComponent = () => {
     issue,
     speed,
     tree,
+    background,
     ...rest
   } = data;
 
@@ -119,19 +121,19 @@ const Form: FunctionComponent = () => {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-4">
-        {Object.entries(rest).map(([key, value]) => (
+        {Object.keys(Trait).map((key) => (
           <div key={key} className="col-span-2 flex flex-col items-center">
-            <label>{key}</label>
+            <label className="font-bold">{key}</label>
             <input
               type="number"
-              value={value}
-              onChange={handleChange(key as keyof Character)}
+              value={rest[key as keyof Traits] ?? 0}
+              onChange={handleChange(key as keyof Character, Number)}
               className="border border-slate-400 rounded p-1 w-full text-center"
             />
           </div>
         ))}
         <div className="col-span-2 flex flex-col items-center">
-          <label>Speed</label>
+          <label className="font-bold">Speed</label>
           <input
             type="number"
             value={calculateSpeed(rest)}
@@ -139,7 +141,7 @@ const Form: FunctionComponent = () => {
             className="p-1 w-full text-center"
           />
         </div>
-        <label className="col-span-1">cope</label>
+        <label className="col-span-1 font-bold">Cope</label>
         <select
           className="col-span-3"
           value={cope}
@@ -151,7 +153,7 @@ const Form: FunctionComponent = () => {
             </option>
           ))}
         </select>
-        <label className="col-span-1">issue</label>
+        <label className="col-span-1 font-bold">Wound</label>
         <select
           className="col-span-3"
           value={issue}
@@ -163,7 +165,7 @@ const Form: FunctionComponent = () => {
             </option>
           ))}
         </select>
-        <label className="col-span-1">need</label>
+        <label className="col-span-1 font-bold">Need</label>
         <select
           className="col-span-3"
           value={need}

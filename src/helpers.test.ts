@@ -6,6 +6,7 @@ const traits = {
   E: -3,
   A: 0,
   N: -1,
+  H: 1,
 };
 
 describe("orderTraits", () => {

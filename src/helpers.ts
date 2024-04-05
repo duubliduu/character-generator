@@ -5,7 +5,7 @@ import classes from "./data/classes.json";
 import backgrounds from "./data/backgrounds.json";
 
 import { nameByRace } from "fantasy-name-generator";
-import { Character, Gender, Storage, Traits } from "./types";
+import {Character, Gender, Storage, Trait, Traits} from "./types";
 
 export const formatModifier = (number: number) =>
   number > 0 ? `+${number}` : number;
@@ -69,7 +69,7 @@ export const randomCope = () => randomOne(copes);
 
 export const randomIssue = () => randomOne(issues);
 
-const traitSet: Traits = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+const traitSet: Traits = { O: 0, C: 0, E: 0, A: 0, N: 0, H: 0 };
 
 export const getSettings = (): Storage["settings"] => {
   const storage = getStorage();
@@ -236,7 +236,7 @@ export const splitTraits = (traits: Traits): Traits[] => {
 };
 
 export const combineTraits = (left: Traits, right: Traits) => {
-  const keys: Array<keyof Traits> = ["O", "C", "E", "A", "N"];
+  const keys = Object.keys(Trait) as Array<keyof Traits>;
   return keys.reduce((traits, key) => {
     if (Math.random() > 0.5) {
       return {
@@ -255,7 +255,7 @@ export const combineTraits = (left: Traits, right: Traits) => {
 export const oppositeGender = (gender: Gender) =>
   gender === Gender.Female ? Gender.Male : Gender.Female;
 
-const set = [3, 1, 1, 2, 2];
+const set = [4, 3, 2, 2, 1, 1];
 
 export const randomizeSet = (): number[] => {
   const [primary, ...rest] = set;

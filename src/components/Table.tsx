@@ -23,7 +23,7 @@ const Table: FunctionComponent<TableProps> = ({ children, onPrint }) => {
           <div className="font-bold">Name</div>
         </div>
         <div className="flex justify-end col-span-4">
-          {"OCEAN".split("").map((item, index) => (
+          {"HEXACO".split("").map((item, index) => (
             <div className="text-center w-10 font-bold" key={index}>
               {item}
             </div>
