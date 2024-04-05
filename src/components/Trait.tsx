@@ -10,8 +10,8 @@ const Trait: FunctionComponent<{ trait: number; title?: string }> = ({
 
   return (
     <div className="text-center w-10 flex flex-col items-center" title={title}>
-      <span>{settings.absoluteValues ? 10 + trait : formatModifier(trait)}</span>
-      <span>{settings.absoluteValues ? 10 - trait : formatModifier(trait * -1)}</span>
+      <span>{settings.absoluteValues ? 5 + trait : formatModifier(trait)}</span>
+      <span>{settings.absoluteValues ? 5 - trait : formatModifier(trait * -1)}</span>
     </div>
   );
 };
