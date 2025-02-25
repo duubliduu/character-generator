@@ -63,7 +63,7 @@ const CharacterProvider: FunctionComponent<PropsWithChildren> = ({
   const [race, setRace] = useState<string>("human");
   const [gender, setGender] = useState<Gender>(Gender.Male);
   const [isMigrated, setIsMigrated] = useState<boolean>(
-    !Array.isArray(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || ""))
+    !Array.isArray(JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || "[]"))
   );
   const [settings, setSettings] = useState<Storage["settings"]>(getSettings());
 
