@@ -255,7 +255,7 @@ export const combineTraits = (left: Traits, right: Traits) => {
 export const oppositeGender = (gender: Gender) =>
   gender === Gender.Female ? Gender.Male : Gender.Female;
 
-const set = [4, 3, 2, 2, 1, 1];
+const set = [0, 3, 2, 2, 1, 1];
 
 export const randomizeSet = (): number[] => {
   const [primary, ...rest] = set;
