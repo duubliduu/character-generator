@@ -85,7 +85,7 @@ function App() {
         </div>
         <div className="col-span-2 flex justify-center items-center">
           <button className="text-white leading-4" onClick={() => toggleSetting("randomSet")}>
-            {settings.randomSet ? "Standard set" : "Random set"}
+            {settings?.randomSet ? "Standard set" : "Random set"}
           </button>
         </div>
         <div className="col-span-2">
@@ -99,7 +99,7 @@ function App() {
       </div>
       <div>
         <button onClick={() => toggleSetting("absoluteValues")}>
-          Toggle absolute values: {settings.absoluteValues ? "on" : "off"}
+          Toggle absolute values: {settings?.absoluteValues ? "on" : "off"}
         </button>
       </div>
       <div className="flex flex-col md:flex-row">
