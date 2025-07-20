@@ -78,7 +78,7 @@ export const getSettings = (): Storage["settings"] => {
     return { randomSet: false, absoluteValues: false };
   }
 
-  return storage.settings;
+  return storage.settings ?? {};
 };
 
 export const randomTraits = (): Traits => {
